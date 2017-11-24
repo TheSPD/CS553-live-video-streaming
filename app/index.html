@@ -8,15 +8,19 @@
 			text-align: center;
 		}
 	</style>
-	
+	<script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 	<canvas id="video-canvas" height="480" width="640"></canvas>
-	<script type="text/javascript" src="./scripts/jsmpeg.min.js"></script>
+	<script type="text/javascript" src="./scripts/jsmpeg.pipe.js"></script>
 	<script type="text/javascript">
+		var socket = io('/webcam')
 		var canvas = document.getElementById('video-canvas');
-		var url = '/video/SampleVideo_1280x720_2mb.mp4';
-		var player = new JSMpeg.Player(url, {canvas: canvas, autoplay: true});
+		var player = new JSMpeg.Player('pipe', {canvas: canvas, autoplay: true});
+
+		socket.on('message', (data) => {
+			player.write(data)
+		})
 	</script>
 </body>
 </html>

@@ -14,7 +14,7 @@
   <canvas id="video-canvas" height="480" width="640"></canvas>
   <script type="text/javascript" src="./scripts/jsmpeg.pipe.js"></script>
   <script type="text/javascript">
-    var socket = io('/screengrab')
+    var socket = io('/customvid')
     var canvas = document.getElementById('video-canvas');
     var player = new JSMpeg.Player('pipe', {canvas: canvas, autoplay: true});
 
