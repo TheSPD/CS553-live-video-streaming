@@ -19,15 +19,20 @@ app.post('/sendStream/:streamName', (request, response) => {
 
 		console.log('Starting streaming ' + streamName)
 		
+		request.on('end', () => {
+			streams.splice(streams.indexOf(streamName), 1)
+			console.log('Stopped streaming ' + streamName)
+		})
+		
 		io.of('/' + streamName, (streamChannel) => {
-			
+			console.log('Someone connected to ' + streamName)
+
 			request.on('data', (data) => {
 				streamChannel.send(data)
 			})
 
-			request.on('end', () => {
-				streams.splice(streams.indexOf(streamName), 1)
-				console.log('Stopped streaming ' + streamName)
+			streamChannel.on('disconnect', () => {
+				console.log('Someone disconnected from ' + streamName)
 			})
 		})		
 	}

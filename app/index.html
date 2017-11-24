@@ -7,13 +7,50 @@
 			background-color: #111;
 			text-align: center;
 		}
+
+		.flex-item1 {
+		    width: 176px;
+		    height: 129px;
+		    margin: 10px;
+		    border-color: gray;
+		    border-width: 2px;
+		    border-style: solid;
+		}
+
+		.thumb {
+			width: 160 !important;
+			height: 120 !important;
+		}
 	</style>
 	<script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-	<canvas id="video-canvas" height="480" width="640"></canvas>
+	<div class="flex-item1">
+	<button id="toggle" onclick="player.toggle()" class="thumb">
+		<canvas id="video-canvas" class="thumb"></canvas>
+	</button>
+	</div>
 	<script type="text/javascript" src="./scripts/jsmpeg.pipe.js"></script>
 	<script type="text/javascript">
+		JSMpeg.Player.prototype.pauseMinify = function (minHeight = 120, minWidth = 160) {
+			this.pause()
+			this.options.canvas.width = minWidth
+			this.options.canvas.height = minHeight
+		}
+
+		JSMpeg.Player.prototype.playMaxify = function(maxHeight = 480, maxWidth = 640){
+			this.play()
+			this.options.canvas.width = maxWidth
+			this.options.canvas.height = maxHeight
+		};
+
+		JSMpeg.Player.prototype.toggle = function(argument){
+			if(this.isPlaying)
+				this.pauseMinify()
+			else
+				this.playMaxify()
+		}
+
 		var socket = io('/webcam')
 		var canvas = document.getElementById('video-canvas');
 		var player = new JSMpeg.Player('pipe', {canvas: canvas, autoplay: true});
@@ -21,6 +58,14 @@
 		socket.on('message', (data) => {
 			player.write(data)
 		})
+
+		player.onLoad = function () {
+			this.pauseMinify()	
+		}
+
+		window.onLoad = function() {
+			player.onLoad()
+		}
 	</script>
 </body>
 </html>
