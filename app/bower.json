@@ -1,0 +1,22 @@
+{
+  "name": "Video Streaming",
+  "homepage": "https://github.com/TheSPD/CS553-live-video-streaming",
+  "authors": [
+    "Shreepad Patil <shreepad007@gmail.com>"
+  ],
+  "description": "Show streaming videos",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "slick-carousel": "^1.8.1"
+  }
+}

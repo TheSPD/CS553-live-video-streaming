@@ -5,7 +5,7 @@ var io = require('socket.io')(http)
 
 app.use(express.static('app'))
 
-var streams = []
+var streams = {}
 
 app.get('/getStreams', (request, response) => {
 	response.send(streams)
@@ -14,26 +14,45 @@ app.get('/getStreams', (request, response) => {
 app.post('/sendStream/:streamName', (request, response) => {
 	let streamName = request.params.streamName
 
-	if(streams.indexOf(streamName) < 0){
-		streams.push(streamName)
+	if(!(streams[streamName])){
+		streams[streamName] = 0
 
 		console.log('Starting streaming ' + streamName)
 		
-		request.on('end', () => {
-			streams.splice(streams.indexOf(streamName), 1)
-			console.log('Stopped streaming ' + streamName)
-		})
-		
+
 		io.of('/' + streamName, (streamChannel) => {
-			console.log('Someone connected to ' + streamName)
+			console.log(streamChannel.request.connection.remoteAddress 
+				+ ' connected to ' 
+				+ streamName)
+			streams[streamName]++
 
 			request.on('data', (data) => {
 				streamChannel.send(data)
 			})
 
 			streamChannel.on('disconnect', () => {
-				console.log('Someone disconnected from ' + streamName)
+				streams[streamName]--
+				console.log(streamChannel.request.connection.remoteAddress 
+					+ ' disconnected from ' 
+					+ streamName)
 			})
+
+			request.on('end', () => {
+				request.destroy()
+				delete streams[streamName]
+
+				const MyNamespace = streamChannel; // Get Namespace
+				const connectedNameSpaceSockets = Object.keys(MyNamespace.connected); // Get Object with Connected SocketIds as properties
+				connectedNameSpaceSockets.forEach(socketId => {
+				    MyNamespace.connected[socketId].disconnect(); // Disconnect Each socket
+				});
+				MyNamespace.removeAllListeners(); // Remove all Listeners for the event emitter
+				
+				delete io.nsps['/' + streamName]; // Remove from the server namespaces
+				
+				console.log('Stopped streaming ' + streamName)
+			})
+
 		})		
 	}
 	else{
