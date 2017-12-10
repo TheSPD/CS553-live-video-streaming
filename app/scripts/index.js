@@ -21,7 +21,9 @@ $(document).ready(function(){
 		player.write(data)
 	})
 
+
 	$('.thumb').on('afterChange', function(event, slick, currentSlide, nextSlide){
+		socket.disconnect()
 		channelName = $(slick.$slides.get(currentSlide)).data('channel')
 		socketAddress = '/' + channelName
 		window.open('/view' +  socketAddress,"_self")
