@@ -29,10 +29,27 @@ app.get('/view/:channelName*?', function(req, res){
 			"name": key,
 			"count": streams[key]
 		})
-	}	
+	}
 
+	var requestedIndex = 0;
+	for (var i = 0; i < channels.length; i++) {
+	    if ( channels[i].name ==  channelRequest)
+	    	requestedIndex = i;
+	}
+
+	let temp = channels.splice(0);
+	
+	for (let i=0; i < requestedIndex; i++) {
+	    let first = temp.shift();
+	    temp.push(first);
+	}
+
+	channels = temp
+
+	channels[0].count++
+	
 	res.render('index', {
-		"default": channelRequest || channels[0],
+		"default": channels[0],
 		"channels": channels
 	});	
 });
