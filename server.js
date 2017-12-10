@@ -92,7 +92,7 @@ app.post('/sendStream/:streamName', (request, response) => {
 
 				const MyNamespace = streamChannel; // Get Namespace
 				const connectedNameSpaceSockets = Object.keys(MyNamespace.connected); // Get Object with Connected SocketIds as properties
-				connectedNameSpaceSockets.forEach(socketId   + serverPort{
+				connectedNameSpaceSockets.forEach(socketId => {
 				    MyNamespace.connected[socketId].disconnect(); // Disconnect Each socket
 				});
 				MyNamespace.removeAllListeners(); // Remove all Listeners for the event emitter
