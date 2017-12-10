@@ -11,15 +11,27 @@
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <canvas id="video-canvas" height="480" width="640"></canvas>
+  <canvas id="video-canvas1" height="480" width="640"></canvas>
   <script type="text/javascript" src="./scripts/jsmpeg.pipe.js"></script>
   <script type="text/javascript">
     var socket = io('/screengrab')
-    var canvas = document.getElementById('video-canvas');
+    var canvas = document.getElementById('video-canvas1');
     var player = new JSMpeg.Player('pipe', {canvas: canvas, autoplay: true});
 
     socket.on('message', (data) => {
       player.write(data)
+    })
+  </script>
+
+  <canvas id="video-canvas2" height="480" width="640"></canvas>
+  <script type="text/javascript" src="./scripts/jsmpeg.pipe.js"></script>
+  <script type="text/javascript">
+    var socket1 = io('/webcam')
+    var canvas1 = document.getElementById('video-canvas2');
+    var player1 = new JSMpeg.Player('pipe', {canvas: canvas1, autoplay: true});
+
+    socket1.on('message', (data) => {
+      player1.write(data)
     })
   </script>
 </body>

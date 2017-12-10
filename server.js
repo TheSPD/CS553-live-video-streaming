@@ -1,11 +1,41 @@
+var path = require('path')
 var express = require('express')
 var app = express()
+var exphbs = require('express-handlebars')
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 
-app.use(express.static('app'))
+// View Engine
+app.set('views', path.join(__dirname, 'app/views'))
+app.engine('handlebars', exphbs({
+	defaultLayout:'layout', 
+	layoutsDir: path.join(__dirname, "app/views/layouts")
+}))
+app.set('view engine', 'handlebars')
+
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'app')))
 
 var streams = {}
+
+app.get('/view/:channelName*?', function(req, res){
+
+	let channelRequest = req.params.channelName;
+
+	let channels = []
+
+	for(key in streams){
+		channels.push({
+			"name": key,
+			"count": streams[key]
+		})
+	}	
+
+	res.render('index', {
+		"default": channelRequest || channels[0],
+		"channels": channels
+	});	
+});
 
 app.get('/getStreams', (request, response) => {
 	response.send(streams)

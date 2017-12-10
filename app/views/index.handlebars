@@ -1,0 +1,17 @@
+<h2 class="page-header">Currently Playing: <span id="channel-name"></span></h2>
+<div class="card">
+	<div class="main">
+		<canvas data-default="{{default.name}}" id="video-canvas"></canvas>
+	</div>
+
+	<div class="thumb">
+		{{#each channels}}
+			<div class="object" data-channel="{{name}}">
+				<!-- <canvas id="video-canvas-{{name}}"></canvas> -->
+				<h3>{{name}}</h3>
+				
+				<!-- <h2>{{count}}</h2> -->
+			</div>
+		{{/each}}
+	</div>
+</div>
