@@ -48,7 +48,8 @@ app.get('/view/:channelName*?', function(req, res){
 
 	channels = temp
 
-	channels[0].count++
+	if (channels[0]) 
+		channels[0].count++
 	
 	res.render('index', {
 		"default": channels[0],
